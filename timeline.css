@@ -1,0 +1,341 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+
+.tl-container *,.tl-container *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+  
+.tl-container, .tl-body, .tl-events, .tl-event-date .date {
+	position: relative;
+	top: auto;
+	left: auto;
+	bottom: auto;
+	right: auto;
+	width: auto;
+}
+
+.tl-container {
+	height: 400px;
+	overflow: hidden;
+	box-shadow: 0 4px 5px 4px #ccc;
+	-moz-box-shadow: 0 4px 5px 4px #ccc;
+	-webkit-box-shadow: 0 4px 5px 4px #ccc;
+  font-family: 'Lato', Calibri, Arial, sans-serif;
+  color: #47a3da;
+  font-size: 16px;
+}
+
+.tl-header {
+  background: #fff;
+  padding: 5px 10px 10px 20px;
+  height: 13%;
+  position: relative;
+  border-top: 5px solid #3594cb;
+  border-bottom: 1px solid #ddd;
+}
+
+.tl-header .tl-title {
+  color: #495468;
+  font-weight: 300;
+  font-size: 18px;
+  margin-top: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.tl-body {
+  height : 87%;
+  background: #f6f6f6;
+  box-shadow: inset 0 1px rgba(255,255,255,0.8);
+}
+
+.tl-events {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ddd;
+}
+
+.tl-details {
+  background-color: white;
+  height: 100%;
+}
+.tl-details a.communityName {
+  color: rgb(98, 163, 218);
+  text-decoration: none;
+}
+
+.tl-details a.url {
+  font-size: 13px;
+  color: rgb(64, 65, 124);
+  text-decoration: underline;
+}
+
+.tl-details a#goback {
+  position: absolute;
+  bottom: 5px;
+  left: 14px;
+}
+
+.tl-details a#eventUrl {
+  position: absolute;
+  bottom: 5px;
+  right: 14px;
+}
+
+.tl-details .summary {
+  color: #888;
+  font-size: 12px;
+}
+
+.tl-details .datePanel {
+  width: 58%;
+  margin: auto;
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.tl-details .datePanel span {
+  color : black;
+}
+
+.tl-details .tl-event-date .year {
+  font-size: 12px;
+  display: inline-block;
+  padding-left: 5px;
+}
+
+.tl-details .description {
+  background-color: white;
+  max-height: 50%;
+}
+
+.tl-details .start {
+  float: left;
+  margin-left: 10px;
+}
+.tl-details .end {
+  float : right;
+  margin-right: 10px;
+}
+
+.tl-details .location {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  line-height: 13px;
+  max-height: 52px;
+  overflow: hidden;
+}
+
+.tl-event {
+	width: 100%;
+	float: none;
+	min-height: 50px;
+	box-shadow: inset 0 -1px rgba(255,255,255,0.2) !important;
+	border-radius: 0px !important;
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+
+.tl-event:hover {
+  background-color: white;
+}
+
+.tl-event-head {
+	height : 20px;
+}
+
+.tl-event-source {
+	float : left;
+}
+
+.tl-event-date {
+	float: right;
+}
+
+.tl-event-date .day {
+	width: 30px;
+	display: inline-block;
+	text-align: right;
+	margin: -10px 0 0 -15px;
+	color: #686a6e;
+	font-weight: 400;
+	pointer-events: none;
+	font-size: 20px;
+	line-height: 20px;
+	text-shadow: 0 -1px 0 rgba(255,255,255,0.8);
+}
+
+.tl-event-date .month {
+	display: inline-block;
+	font-size: 10px;
+	text-transform: uppercase;
+	padding-left: 5px;
+}
+
+.tl-event-date .year {
+  font-size : 12px;
+}
+
+.tl-event-body, .tl-details .description {
+	color: rgb(239, 79, 105);
+	font-size: 14px;
+	display: inline-block;
+	padding: 3px 5px;
+	border-radius: 3px;
+	text-overflow: ellipsis;
+	max-width: 100%;
+	margin-bottom: 1px;
+}
+
+.tl-event-body {
+  overflow: hidden;
+}
+
+.mCSB_inside>.mCSB_container {
+  margin-right: 12px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* fontello spinner */
+@font-face {
+  font-family: 'fontello';
+  src: url('./font/fontello.eot?775004');
+  src: url('./font/fontello.eot?775004#iefix') format('embedded-opentype'),
+       url('./font/fontello.woff?775004') format('woff'),
+       url('./font/fontello.ttf?775004') format('truetype'),
+       url('./font/fontello.svg?775004#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.spinner
+{
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* You can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3);
+
+  position: absolute;
+  bottom: 10px;
+  margin: auto;
+  width: 100%;
+}
+
+.animate-spin {
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
