@@ -1,15 +1,16 @@
 # Community Timeline
 
-A flexible jQuery plugin to embed FOSSASIA community timeline into your website.
+A flexible jQuery plugin to embed FOSSASIA community timeline to your website.
 
 
 ### Initialize
 
 ```html
 <div id="timeline-id"></div>
+
 <script src="timeline.js"></script>
 <script>
-$('#timeline-id').communityTimeline({});
+  $('#timeline-id').communityTimeline({});
 </script>
 ```
 
