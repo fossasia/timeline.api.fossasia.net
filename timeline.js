@@ -214,7 +214,8 @@
                 .mCustomScrollbar({
                     theme: "dark",
                 });
-            if (data.url) detailsDiv.find('a#eventUrl').attr('href', data.url);
+            if (data.url) detailsDiv.find('a#eventUrl').attr('href', data.url).show();
+            else detailsDiv.find('a#eventUrl').hide();
             updateDate(detailsDiv.find('.start'), data.start);
             updateDate(detailsDiv.find('.end'), data.end);
             if (!data.start) detailsDiv.find('.datePanel').find('span').hide();
