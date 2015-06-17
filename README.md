@@ -60,6 +60,6 @@ A flexible jQuery plugin to embed FOSSASIA community timeline to your website.
 
   By default this value is set to current year in 4-digits. The year of events happening in currentYear will not be displayed in datetime area.
 
-### Examples
+### Showcase
 
-  http://etud.insa-toulouse.fr/~hadang/EventsPanel/Timeline/timeline.html
+  http://fossasia.github.io/timeline.api.fossasia.net/
