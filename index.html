@@ -1,0 +1,50 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="malihu-scrollbar/jquery.mCustomScrollbar.min.css" />
+	<link rel="stylesheet" type="text/css" href="timeline.css"/>
+	<link rel="stylesheet" type="text/css" href="custom.css"/>
+</head>
+<body>
+<div style="width : 50%; float : left">
+<div id="timeline1"></div>
+<div id="timeline2"></div>
+</div>
+<div style="width : 50%; float: right; margin-bottom : 20px;">
+<div id="timeline3"></div>
+<div id="timeline4"></div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="timeline.js"></script>
+<script>
+$(document).ready(function() {
+	$('#timeline1').communityTimeline({
+		title : 'CUSTOM INPUT',
+		data : 
+		[
+			{source : "halle", start : "2015-06-08T20:00:00", end : "2015-06-08T00:00:00", summary : " Yahooooodsadj lksakldjklsajdkjsakldjklsajdklsa jdksajdklsja kldjklsa jdkljsakldjska", description : "adzza"},
+			{source : "westpfalz", start : "2015-06-09T20:00:00", end : "2015-06-09T00:00:00", summary : "asdsad", description : "adzza"},
+			{source : "westpfalz", start : "2015-06-09T20:00:00", end : "2015-06-09T00:00:00", summary : "asdsad", description : "adzza"},
+			{source : "westpfalz", start : "2015-06-09T20:00:00", end : "2015-06-09T00:00:00", summary : "asdsad", description : "adzza"},
+			{source : "westpfalz", start : "2015-06-09T20:00:00", end : "2015-06-09T00:00:00", summary : "asdsad", description : "adzza"},
+			{source : "westpfalz", start : "2015-06-09T20:00:00", end : "2015-06-09T00:00:00", summary : "asdsad", description : "adzza"}
+		],
+		disableAPISource: true
+	});
+	$('#timeline2').communityTimeline({
+		source : 'halle',
+		title : 'HALLE EVENTS',
+		until : '2015-09-10T23:59:59'
+	});
+	$('#timeline3').communityTimeline({
+		source : 'all'
+	});
+	$('#timeline4').communityTimeline({
+		source : 'all',
+		title : 'UPCOMING EVENTS',
+		order : 'oldest-first'
+	});
+});	
+</script>
+</body>
+</html>
