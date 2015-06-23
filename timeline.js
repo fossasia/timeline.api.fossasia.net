@@ -5,7 +5,8 @@
         this.options = $.extend({}, Timeline.DEFAULT_OPTIONS, options);
         this.elem = elem;
         this.elem.addClass('tl-container');
-        this.insertHead();
+        if (this.options.title != null && this.options.title != 'null')
+            this.insertHead();
         this.insertBody();
 	};
 
@@ -19,7 +20,8 @@
         limit : '6',
         lazyLoadLimit : '10',
         until : '2016-01-31T23:59:59',
-        order : 'latest-first'
+        order : 'latest-first',
+        disableScroll : false
     };
 
     Timeline.prototype.insertHead = function() {
@@ -64,9 +66,10 @@
             }
         }
 
-        var eventsMCBContainer = null;
+        var eventContainer = null;
+        if (this.options.disableScroll) eventContainer = eventsDiv;
         function insertRow(data) {
-            var eventDiv = eventsMCBContainer.append('<div class="tl-event">').find('.tl-event').last();
+            var eventDiv = eventContainer.append('<div class="tl-event">').find('.tl-event').last();
             var eventHead = eventDiv.append('<div class="tl-event-head">').find('.tl-event-head');
             eventHead.append('<div class="tl-event-source">' + data.source);
             insertDate(eventHead, data.start);
@@ -98,49 +101,51 @@
             tlBody.append('<i class="spinner animate-spin hidden">&#xe801;</i>');
 
             // add scrollbar
-            var noMoreEvents = false;
-            self.elem.find(' .tl-events').mCustomScrollbar({
-                autoHideScrollbar:true,
-                theme: "light-3",
-                callbacks : {
-                    onTotalScroll : function() {
-                        if (self.options.disableAPISource || noMoreEvents) return;
-                        self.elem.find('.spinner').removeClass('hidden');
-                        var apiReq = self.options.apiUrl
-                            + '?fields=start,source,summary,description,url,end,location'
-                            + '&source=' + self.options.source
-                            + '&limit=' + self.options.lazyLoadLimit;
-                        if (self.options.order === 'latest-first') {
-                            apiReq += '&sort=asc-start'
-                            + '&to=' + eventsDiv.find('.tl-event').last().data('date');
-                        } else {
-                            var from = eventsDiv.find('.tl-event').last().data('date');
-                            apiReq += '&sort=desc-start' 
-                            + '&from=' + replaceAt(from, from.length - 1, from[from.length - 1] + 1);
-                        }
-                        console.log(apiReq);
-                        $.getJSON(apiReq, function (apiResult) {
-                                if (apiResult.error) {
-                                    console.error('API error : ' + apiResult.error);
-                                    if (apiResult.error == "No result found") {
-                                        noMoreEvents = true;
-                                    }
-                                } else {
-                                for (var key in apiResult) {
-                                        apiResult[key].start = self.convertToValidDateTime(apiResult[key].start);
-                                        apiResult[key].end = self.convertToValidDateTime(apiResult[key].end);
-                                    }
-                                insertAllRows(apiResult);
+            if (!self.options.disableScroll) {
+                var noMoreEvents = false;
+                self.elem.find(' .tl-events').mCustomScrollbar({
+                    autoHideScrollbar:true,
+                    theme: "light-3",
+                    callbacks : {
+                        onTotalScroll : function() {
+                            if (self.options.disableAPISource || noMoreEvents) return;
+                            self.elem.find('.spinner').removeClass('hidden');
+                            var apiReq = self.options.apiUrl
+                                + '?fields=start,source,summary,description,url,end,location,sourceurl'
+                                + '&source=' + self.options.source
+                                + '&limit=' + self.options.lazyLoadLimit;
+                            if (self.options.order === 'latest-first') {
+                                apiReq += '&sort=asc-start'
+                                + '&to=' + eventsDiv.find('.tl-event').last().data('date');
+                            } else {
+                                var from = eventsDiv.find('.tl-event').last().data('date');
+                                apiReq += '&sort=desc-start'
+                                + '&from=' + replaceAt(from, from.length - 1, from[from.length - 1] + 1);
                             }
-                            self.elem.find('.spinner').addClass('hidden');
-                        });
-                    }
-                },
-                onTotalScrollOffset:100,
-                alwaysTriggerOffsets:false
-            });
-            eventsMCBContainer = eventsDiv.find('.mCSB_container');
-            $(document).trigger($.Event('communityTimeline.ready'));
+                            console.log(apiReq);
+                            $.getJSON(apiReq, function (apiResult) {
+                                    if (apiResult.error) {
+                                        console.error('API error : ' + apiResult.error);
+                                        if (apiResult.error == "No result found") {
+                                            noMoreEvents = true;
+                                        }
+                                    } else {
+                                    for (var key in apiResult) {
+                                            apiResult[key].start = self.convertToValidDateTime(apiResult[key].start);
+                                            apiResult[key].end = self.convertToValidDateTime(apiResult[key].end);
+                                        }
+                                    insertAllRows(apiResult);
+                                }
+                                self.elem.find('.spinner').addClass('hidden');
+                            });
+                        }
+                    },
+                    onTotalScrollOffset:100,
+                    alwaysTriggerOffsets:false
+                });
+                eventContainer = eventsDiv.find('.mCSB_container');
+            }
+                $(document).trigger($.Event('communityTimeline.ready'));
         }
         var combinedData = [];
         if (self.options.data) {
@@ -165,7 +170,7 @@
         }
 
         (function prepareDetailsDiv() {
-            detailsDiv.append('<a class="communityName">')
+            detailsDiv.append('<a class="communityName" target="_blank">')
                 .append('<div class="summary">')
                 .append('<div class="description">')
                 .append('<div class="datePanel">' 
@@ -207,7 +212,7 @@
             }   
 
 
-            detailsDiv.find('a.communityName').attr('href', data.url ? data.url : '#').text(data.source);
+            detailsDiv.find('a.communityName').attr('href', data.sourceurl ? 'http://' + data.sourceurl : '#').text(data.source);
             detailsDiv.find('.summary').text(data.summary ? data.summary : '');
             detailsDiv.find('.description')
                 .append(escapeHtml(data.description))
@@ -238,13 +243,12 @@
 
     Timeline.prototype.getData = function(callback) {
         var apiCall = this.options.apiUrl 
-            + '?fields=start,source,summary,description,url,end,location'
+            + '?fields=start,source,summary,description,url,end,location,sourceurl'
             + '&source=' + this.options.source
             + '&limit=' + this.options.limit;
         if (this.options.order == 'latest-first') {
             apiCall += '&sort=asc-start'
-            + '&to=' + this.options.until
-            + '&from=now';
+            + '&to=' + this.options.until;
         } else {
             apiCall += '&sort=desc-start'
             + '&from=now';

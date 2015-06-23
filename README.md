@@ -59,6 +59,10 @@ $('#timeline-id').communityTimeline({});
 
   By default this value is set to current year in 4-digits. The year of events happening in currentYear will not be displayed in datetime area.
 
+* **disableScroll**
+ 
+  Disable malihu scrollbar for events list.
+  
 ### Examples
 
   http://etud.insa-toulouse.fr/~hadang/EventsPanel/Timeline/timeline.html
