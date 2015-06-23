@@ -111,7 +111,7 @@
                             if (self.options.disableAPISource || noMoreEvents) return;
                             self.elem.find('.spinner').removeClass('hidden');
                             var apiReq = self.options.apiUrl
-                                + '?fields=start,source,summary,description,url,end,location'
+                                + '?fields=start,source,summary,description,url,end,location,sourceurl'
                                 + '&source=' + self.options.source
                                 + '&limit=' + self.options.lazyLoadLimit;
                             if (self.options.order === 'latest-first') {
@@ -170,7 +170,7 @@
         }
 
         (function prepareDetailsDiv() {
-            detailsDiv.append('<a class="communityName">')
+            detailsDiv.append('<a class="communityName" target="_blank">')
                 .append('<div class="summary">')
                 .append('<div class="description">')
                 .append('<div class="datePanel">' 
@@ -212,7 +212,7 @@
             }   
 
 
-            detailsDiv.find('a.communityName').attr('href', data.url ? data.url : '#').text(data.source);
+            detailsDiv.find('a.communityName').attr('href', data.sourceurl ? 'http://' + data.sourceurl : '#').text(data.source);
             detailsDiv.find('.summary').text(data.summary ? data.summary : '');
             detailsDiv.find('.description')
                 .append(escapeHtml(data.description))
@@ -243,7 +243,7 @@
 
     Timeline.prototype.getData = function(callback) {
         var apiCall = this.options.apiUrl 
-            + '?fields=start,source,summary,description,url,end,location'
+            + '?fields=start,source,summary,description,url,end,location,sourceurl'
             + '&source=' + this.options.source
             + '&limit=' + this.options.limit;
         if (this.options.order == 'latest-first') {
