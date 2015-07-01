@@ -3,18 +3,33 @@
 A flexible jQuery plugin to embed FOSSASIA community timeline to your website.
 
 
-### Initialize
+## How to use
+
+* Clone the repo 
+
+```
+git clone https://github.com/fossasia/timeline.api.fossasia.net lib
+```
+
+* Include css & js files in html page, prepare a blank div, and call library initializer
 
 ```html
+<head>
+  <link rel="stylesheet" type="text/css" href="lib/malihu-scrollbar/jquery.mCustomScrollbar.min.css" />
+  <link rel="stylesheet" type="text/css" href="lib/timeline.css"/>
+</head>
 <div id="timeline-id"></div>
 
-<script src="timeline.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="lib/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="lib/timeline.js"></script>
 <script>
-  $('#timeline-id').communityTimeline({});
+  var options = {title: "Awesome timeline plugin", limit : 5};
+  $('#timeline-id').communityTimeline(options);
 </script>
 ```
 
-### Library options
+## Library options
 
 * **title**
 
@@ -60,6 +75,14 @@ A flexible jQuery plugin to embed FOSSASIA community timeline to your website.
 
   By default this value is set to current year in 4-digits. The year of events happening in currentYear will not be displayed in datetime area.
 
-### Showcase
+* **disableScroll**
+ 
+  Disable malihu scrollbar for events list.
+  
+## Examples
 
   http://fossasia.github.io/timeline.api.fossasia.net/
+
+## Contribute
+
+  The styling can be furtherly improved, either by modifying `timeline.css`, or by overriding with custom style. Either way, please help us improve the library, report issues or send us pull requests.
