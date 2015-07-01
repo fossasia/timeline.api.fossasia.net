@@ -1,19 +1,19 @@
 +function($) {
 	'use strict';
 
-	var Timeline = function(elem, options) {
+	var Timeline = function(elem, options, callback) {
         this.options = $.extend({}, Timeline.DEFAULT_OPTIONS, options);
         this.elem = elem;
         this.elem.addClass('tl-container');
         if (this.options.title != null && this.options.title != 'null')
             this.insertHead();
-        this.insertBody();
+        this.insertBody(callback);
 	};
 
     Timeline.DEFAULT_OPTIONS = {
         title : "Community timeline",
         monthsLabels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        apiUrl : 'http://localhost/fossasia/common.api.fossasia.net/ics-collector/CalendarAPI.php',
+        apiUrl : 'http://common-fossasia-api.herokuapp.com/ics-collector/CalendarAPI.php',
         source : 'all',
         disableAPISource : false,
         currentYear : '2015',
@@ -28,11 +28,10 @@
         this.elem.append('<div class="tl-header"><div class="tl-title">' + this.options.title + '</div></div>');
     };
 
-    Timeline.prototype.insertBody = function() {
-        this.elem.append('<div class="tl-body"><div class="tl-events"></div><div class="tl-details" style="display : none;"></div></div>');
-        var tlBody = this.elem.find('.tl-body');
-        var eventsDiv = this.elem.find('.tl-events');
-        var detailsDiv = this.elem.find('.tl-details');
+    Timeline.prototype.insertBody = function(callback) {
+        var tlBody = $('<div class="tl-body"><div class="tl-events"></div><div class="tl-details" style="display : none;"></div></div>');
+        var eventsDiv = tlBody.find('.tl-events');
+        var detailsDiv = tlBody.find('.tl-details');
         // Escape html string & convert some special characters to equivalent html tags
         var entityMap = {
             "&": "&amp;",
@@ -89,7 +88,8 @@
                     eventDiv.attr('data-date', data[key].start);
                 }
             }
-           
+            $(document).trigger($.Event('communityTimeline.ready'));
+            self.elem.append(tlBody);
         }
 
         function replaceAt(str, index, character) {
@@ -103,13 +103,13 @@
             // add scrollbar
             if (!self.options.disableScroll) {
                 var noMoreEvents = false;
-                self.elem.find(' .tl-events').mCustomScrollbar({
+                eventsDiv.mCustomScrollbar({
                     autoHideScrollbar:true,
                     theme: "light-3",
                     callbacks : {
                         onTotalScroll : function() {
                             if (self.options.disableAPISource || noMoreEvents) return;
-                            self.elem.find('.spinner').removeClass('hidden');
+                            tlBody.find('.spinner').removeClass('hidden');
                             var apiReq = self.options.apiUrl
                                 + '?fields=start,source,summary,description,url,end,location,sourceurl'
                                 + '&source=' + self.options.source
@@ -136,7 +136,7 @@
                                         }
                                     insertAllRows(apiResult);
                                 }
-                                self.elem.find('.spinner').addClass('hidden');
+                                tlBody.find('.spinner').addClass('hidden');
                             });
                         }
                     },
@@ -145,7 +145,6 @@
                 });
                 eventContainer = eventsDiv.find('.mCSB_container');
             }
-                $(document).trigger($.Event('communityTimeline.ready'));
         }
         var combinedData = [];
         if (self.options.data) {
@@ -156,6 +155,9 @@
         }
         if (!this.options.disableAPISource) {
             this.getData(function(data) {
+                 if (data.error) {
+                    throw 'API error : ' + data.error;
+                }
                 prepareElems();
                 for (var key in data) {
                     data[key].start = self.convertToValidDateTime(data[key].start);
@@ -163,6 +165,7 @@
                     combinedData.push(data[key]);
                 }
                 insertAllRows(combinedData);
+                callback();
             });
         } else {
             prepareElems();
@@ -255,10 +258,6 @@
         }
         console.log(apiCall);
         $.getJSON(apiCall, function(apiResult) {
-            if (apiResult.error) {
-                 console.error('API error : ' + apiResult.error);
-                 return;
-            }
             callback(apiResult);
         });
     };
@@ -267,8 +266,8 @@
         // body...
     };
 
-	$.fn.communityTimeline = function(options) {
-        return new Timeline(this, options);
+	$.fn.communityTimeline = function(options, callback) {
+        return new Timeline(this, options, callback);
     }
     $.fn.communityTimeline.Constructor = Timeline;
 }(jQuery);

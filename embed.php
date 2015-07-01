@@ -20,7 +20,15 @@
 				}
 			}
 		?>
-		$('#embed-timeline').communityTimeline(options);
+
+		$('#embed-timeline').communityTimeline(options, function() {
+			window.parent.postMessage('embed-timeline-loaded', "*");
+		});
+		window.onerror = function(err) {
+			if (err.indexOf('API error') != -1) {
+				window.parent.postMessage('embed-timeline-error', "*");
+			}
+		};
 	});
 	</script>
 </body>
