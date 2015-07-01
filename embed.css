@@ -1,0 +1,26 @@
+.tl-container {
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+.tl-container, .tl-events {
+	height : initial;
+}
+
+.tl-container, .tl-event-body, .tl-details .description{
+	font-size: 12px;
+}
+
+.tl-event-body, .tl-details .description {
+	color: black;
+}
+
+.tl-details {
+	overflow-y: scroll;
+}
+.tl-details a#goback {
+	display: none;
+}
+
+.tl-details a.communityName {
+	color: #0078A8;
+	font-size: 12px;
+}

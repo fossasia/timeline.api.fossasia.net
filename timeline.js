@@ -1,36 +1,37 @@
 +function($) {
 	'use strict';
 
-	var Timeline = function(elem, options) {
+	var Timeline = function(elem, options, callback) {
         this.options = $.extend({}, Timeline.DEFAULT_OPTIONS, options);
         this.elem = elem;
         this.elem.addClass('tl-container');
-        this.insertHead();
-        this.insertBody();
+        if (this.options.title != null && this.options.title != 'null')
+            this.insertHead();
+        this.insertBody(callback);
 	};
 
     Timeline.DEFAULT_OPTIONS = {
         title : "Community timeline",
         monthsLabels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        apiUrl : 'http://localhost/fossasia/common.api.fossasia.net/ics-collector/CalendarAPI.php',
+        apiUrl : 'http://common-fossasia-api.herokuapp.com/ics-collector/CalendarAPI.php',
         source : 'all',
         disableAPISource : false,
         currentYear : '2015',
         limit : '6',
         lazyLoadLimit : '10',
         until : '2016-01-31T23:59:59',
-        order : 'latest-first'
+        order : 'latest-first',
+        disableScroll : false
     };
 
     Timeline.prototype.insertHead = function() {
         this.elem.append('<div class="tl-header"><div class="tl-title">' + this.options.title + '</div></div>');
     };
 
-    Timeline.prototype.insertBody = function() {
-        this.elem.append('<div class="tl-body"><div class="tl-events"></div><div class="tl-details" style="display : none;"></div></div>');
-        var tlBody = this.elem.find('.tl-body');
-        var eventsDiv = this.elem.find('.tl-events');
-        var detailsDiv = this.elem.find('.tl-details');
+    Timeline.prototype.insertBody = function(callback) {
+        var tlBody = $('<div class="tl-body"><div class="tl-events"></div><div class="tl-details" style="display : none;"></div></div>');
+        var eventsDiv = tlBody.find('.tl-events');
+        var detailsDiv = tlBody.find('.tl-details');
         // Escape html string & convert some special characters to equivalent html tags
         var entityMap = {
             "&": "&amp;",
@@ -64,9 +65,10 @@
             }
         }
 
-        var eventsMCBContainer = null;
+        var eventContainer = null;
+        if (this.options.disableScroll) eventContainer = eventsDiv;
         function insertRow(data) {
-            var eventDiv = eventsMCBContainer.append('<div class="tl-event">').find('.tl-event').last();
+            var eventDiv = eventContainer.append('<div class="tl-event">').find('.tl-event').last();
             var eventHead = eventDiv.append('<div class="tl-event-head">').find('.tl-event-head');
             eventHead.append('<div class="tl-event-source">' + data.source);
             insertDate(eventHead, data.start);
@@ -86,7 +88,8 @@
                     eventDiv.attr('data-date', data[key].start);
                 }
             }
-           
+            $(document).trigger($.Event('communityTimeline.ready'));
+            self.elem.append(tlBody);
         }
 
         function replaceAt(str, index, character) {
@@ -98,49 +101,50 @@
             tlBody.append('<i class="spinner animate-spin hidden">&#xe801;</i>');
 
             // add scrollbar
-            var noMoreEvents = false;
-            self.elem.find(' .tl-events').mCustomScrollbar({
-                autoHideScrollbar:true,
-                theme: "light-3",
-                callbacks : {
-                    onTotalScroll : function() {
-                        if (self.options.disableAPISource || noMoreEvents) return;
-                        self.elem.find('.spinner').removeClass('hidden');
-                        var apiReq = self.options.apiUrl
-                            + '?fields=start,source,summary,description,url,end,location'
-                            + '&source=' + self.options.source
-                            + '&limit=' + self.options.lazyLoadLimit;
-                        if (self.options.order === 'latest-first') {
-                            apiReq += '&sort=asc-start'
-                            + '&to=' + eventsDiv.find('.tl-event').last().data('date');
-                        } else {
-                            var from = eventsDiv.find('.tl-event').last().data('date');
-                            apiReq += '&sort=desc-start' 
-                            + '&from=' + replaceAt(from, from.length - 1, from[from.length - 1] + 1);
-                        }
-                        console.log(apiReq);
-                        $.getJSON(apiReq, function (apiResult) {
-                                if (apiResult.error) {
-                                    console.error('API error : ' + apiResult.error);
-                                    if (apiResult.error == "No result found") {
-                                        noMoreEvents = true;
-                                    }
-                                } else {
-                                for (var key in apiResult) {
-                                        apiResult[key].start = self.convertToValidDateTime(apiResult[key].start);
-                                        apiResult[key].end = self.convertToValidDateTime(apiResult[key].end);
-                                    }
-                                insertAllRows(apiResult);
+            if (!self.options.disableScroll) {
+                var noMoreEvents = false;
+                eventsDiv.mCustomScrollbar({
+                    autoHideScrollbar:true,
+                    theme: "light-3",
+                    callbacks : {
+                        onTotalScroll : function() {
+                            if (self.options.disableAPISource || noMoreEvents) return;
+                            tlBody.find('.spinner').removeClass('hidden');
+                            var apiReq = self.options.apiUrl
+                                + '?fields=start,source,summary,description,url,end,location,sourceurl'
+                                + '&source=' + self.options.source
+                                + '&limit=' + self.options.lazyLoadLimit;
+                            if (self.options.order === 'latest-first') {
+                                apiReq += '&sort=asc-start'
+                                + '&to=' + eventsDiv.find('.tl-event').last().data('date');
+                            } else {
+                                var from = eventsDiv.find('.tl-event').last().data('date');
+                                apiReq += '&sort=desc-start'
+                                + '&from=' + replaceAt(from, from.length - 1, from[from.length - 1] + 1);
                             }
-                            self.elem.find('.spinner').addClass('hidden');
-                        });
-                    }
-                },
-                onTotalScrollOffset:100,
-                alwaysTriggerOffsets:false
-            });
-            eventsMCBContainer = eventsDiv.find('.mCSB_container');
-            $(document).trigger($.Event('communityTimeline.ready'));
+                            console.log(apiReq);
+                            $.getJSON(apiReq, function (apiResult) {
+                                    if (apiResult.error) {
+                                        console.error('API error : ' + apiResult.error);
+                                        if (apiResult.error == "No result found") {
+                                            noMoreEvents = true;
+                                        }
+                                    } else {
+                                    for (var key in apiResult) {
+                                            apiResult[key].start = self.convertToValidDateTime(apiResult[key].start);
+                                            apiResult[key].end = self.convertToValidDateTime(apiResult[key].end);
+                                        }
+                                    insertAllRows(apiResult);
+                                }
+                                tlBody.find('.spinner').addClass('hidden');
+                            });
+                        }
+                    },
+                    onTotalScrollOffset:100,
+                    alwaysTriggerOffsets:false
+                });
+                eventContainer = eventsDiv.find('.mCSB_container');
+            }
         }
         var combinedData = [];
         if (self.options.data) {
@@ -151,6 +155,9 @@
         }
         if (!this.options.disableAPISource) {
             this.getData(function(data) {
+                 if (data.error) {
+                    throw 'API error : ' + data.error;
+                }
                 prepareElems();
                 for (var key in data) {
                     data[key].start = self.convertToValidDateTime(data[key].start);
@@ -158,6 +165,7 @@
                     combinedData.push(data[key]);
                 }
                 insertAllRows(combinedData);
+                callback();
             });
         } else {
             prepareElems();
@@ -165,7 +173,7 @@
         }
 
         (function prepareDetailsDiv() {
-            detailsDiv.append('<a class="communityName">')
+            detailsDiv.append('<a class="communityName" target="_blank">')
                 .append('<div class="summary">')
                 .append('<div class="description">')
                 .append('<div class="datePanel">' 
@@ -207,14 +215,15 @@
             }   
 
 
-            detailsDiv.find('a.communityName').attr('href', data.url ? data.url : '#').text(data.source);
+            detailsDiv.find('a.communityName').attr('href', data.sourceurl ? 'http://' + data.sourceurl : '#').text(data.source);
             detailsDiv.find('.summary').text(data.summary ? data.summary : '');
             detailsDiv.find('.description')
                 .append(escapeHtml(data.description))
                 .mCustomScrollbar({
                     theme: "dark",
                 });
-            if (data.url) detailsDiv.find('a#eventUrl').attr('href', data.url);
+            if (data.url) detailsDiv.find('a#eventUrl').attr('href', data.url).show();
+            else detailsDiv.find('a#eventUrl').hide();
             updateDate(detailsDiv.find('.start'), data.start);
             updateDate(detailsDiv.find('.end'), data.end);
             if (!data.start) detailsDiv.find('.datePanel').find('span').hide();
@@ -237,23 +246,18 @@
 
     Timeline.prototype.getData = function(callback) {
         var apiCall = this.options.apiUrl 
-            + '?fields=start,source,summary,description,url,end,location'
+            + '?fields=start,source,summary,description,url,end,location,sourceurl'
             + '&source=' + this.options.source
             + '&limit=' + this.options.limit;
         if (this.options.order == 'latest-first') {
             apiCall += '&sort=asc-start'
-            + '&to=' + this.options.until
-            + '&from=now';
+            + '&to=' + this.options.until;
         } else {
             apiCall += '&sort=desc-start'
             + '&from=now';
         }
         console.log(apiCall);
         $.getJSON(apiCall, function(apiResult) {
-            if (apiResult.error) {
-                 console.error('API error : ' + apiResult.error);
-                 return;
-            }
             callback(apiResult);
         });
     };
@@ -262,8 +266,8 @@
         // body...
     };
 
-	$.fn.communityTimeline = function(options) {
-        return new Timeline(this, options);
+	$.fn.communityTimeline = function(options, callback) {
+        return new Timeline(this, options, callback);
     }
     $.fn.communityTimeline.Constructor = Timeline;
 }(jQuery);
