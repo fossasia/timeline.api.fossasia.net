@@ -1,19 +1,36 @@
-# Community Timeline
+Community Timeline
+===========
+A flexible jQuery plugin to embed FOSSASIA community timeline to your website.
 
-A flexible jQuery plugin to embed FOSSASIA community timeline into your website.
+[![Join the chat at https://gitter.im/fossasia/api.fossasia.net](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fossasia/api.fossasia.net?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## How to use
 
-### Initialize
+* Clone the repo 
+
+```
+git clone https://github.com/fossasia/timeline.api.fossasia.net lib
+```
+
+* Include css & js files in html page, prepare a blank div, and call library initializer
 
 ```html
+<head>
+  <link rel="stylesheet" type="text/css" href="lib/malihu-scrollbar/jquery.mCustomScrollbar.min.css" />
+  <link rel="stylesheet" type="text/css" href="lib/timeline.css"/>
+</head>
 <div id="timeline-id"></div>
-<script src="timeline.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="lib/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="lib/timeline.js"></script>
 <script>
-$('#timeline-id').communityTimeline({});
+  var options = {title: "Awesome timeline plugin", limit : 5};
+  $('#timeline-id').communityTimeline(options);
 </script>
 ```
 
-### Library options
+## Library options
 
 * **title**
 
@@ -63,6 +80,12 @@ $('#timeline-id').communityTimeline({});
  
   Disable malihu scrollbar for events list.
   
-### Examples
+## Examples
 
-  http://etud.insa-toulouse.fr/~hadang/EventsPanel/Timeline/timeline.html
+  http://fossasia.github.io/timeline.api.fossasia.net/
+
+## Contribute
+
+  The styling can be furtherly improved, either by modifying `timeline.css`, or by overriding with custom style. Either way, please help us improve the library, report issues or send us pull requests.
+  
+[FOSSASIA API repo](https://github.com/fossasia/api.fossasia.net)
