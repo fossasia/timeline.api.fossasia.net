@@ -267,6 +267,8 @@
     };
 
 	$.fn.communityTimeline = function(options, callback) {
+        // avoid warning
+        if (!callback) callback = function() {};
         return new Timeline(this, options, callback);
     }
     $.fn.communityTimeline.Constructor = Timeline;
