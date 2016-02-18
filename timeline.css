@@ -1,7 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 
 .tl-container *,.tl-container *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
-  
+
 .tl-container, .tl-body, .tl-events, .tl-event-date .date {
 	position: relative;
 	top: auto;
@@ -96,6 +96,13 @@
 
 .tl-details .datePanel span {
   color : black;
+}
+
+.tl-details input#button1{
+	cursor: pointer;
+	margin-left: 22%;
+	margin-top: 3%
+
 }
 
 .tl-details .tl-event-date .year {
@@ -221,32 +228,32 @@
   font-weight: normal;
   font-size: 14px;
   speak: none;
- 
+
   display: inline-block;
   text-decoration: inherit;
   width: 1em;
   margin-right: .2em;
   text-align: center;
   /* opacity: .8; */
- 
+
   /* For safety - reset parent styles, that can break glyph codes*/
   font-variant: normal;
   text-transform: none;
- 
+
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
- 
+
   /* Animation center compensation - margins should be symmetric */
   /* remove if not needed */
   margin-left: .2em;
- 
+
   /* You can be more comfortable with increased icons size */
   /* font-size: 120%; */
- 
+
   /* Font smoothing. That was taken from TWBS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- 
+
   /* Uncomment for 3D effect */
   text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3);
 

@@ -2,6 +2,7 @@
 	'use strict';
 
 	var Timeline = function(elem, options, callback) {
+		//this automatically merges the two objects
         this.options = $.extend({}, Timeline.DEFAULT_OPTIONS, options);
         this.elem = elem;
         this.elem.addClass('tl-container');
@@ -73,7 +74,8 @@
             eventHead.append('<div class="tl-event-source">' + data.source);
             insertDate(eventHead, data.start);
             eventDiv.append('<div class="tl-event-body">' + (data.description ? escapeHtml(data.description) : (data.summary ? escapeHtml(data.summary) : 'No description provided.')));
-            eventDiv.click(function() {
+					//	eventHead.append('<input type="button" value="new button"/>')
+						eventDiv.click(function() {
                 updateDetail(data);
                 eventsDiv.css('display' , 'none');
                 detailsDiv.fadeIn();
@@ -122,7 +124,7 @@
                                 apiReq += '&sort=desc-start'
                                 + '&from=' + replaceAt(from, from.length - 1, from[from.length - 1] + 1);
                             }
-                            console.log(apiReq);
+
                             $.getJSON(apiReq, function (apiResult) {
                                     if (apiResult.error) {
                                         console.error('API error : ' + apiResult.error);
@@ -172,17 +174,19 @@
             insertAllRows(combinedData);
         }
 
+
         (function prepareDetailsDiv() {
             detailsDiv.append('<a class="communityName" target="_blank">')
                 .append('<div class="summary">')
                 .append('<div class="description">')
-                .append('<div class="datePanel">' 
+                .append('<div class="datePanel">'
                     + '<div class="start tl-event-date"><div class="day"></div><div class="month"></div><div class="year"></div><div class="time"></div></div>'
                     + '<span>to</span>'
                     + '<div class="end tl-event-date"><div class="day"></div><div class="month"></div><div class="year"></div><div class="time"></div>')
                 .append('<div class="location">')
                 .append('<a id="eventUrl" class="url" target="_blank">To event page')
-                .append('<a href="#" id="goback" class="url">Back to timeline');
+                .append('<a href="#" id="goback" class="url">Back to timeline')
+								.append('<input type="image" id="button1" src="/pic.png" style="border-style:none;" height="28.5" width="206" align="middle"></input>');
             detailsDiv.find('a#goback').click(function(e) {
                 e.preventDefault();
                 detailsDiv.css('display', 'none');
@@ -190,7 +194,7 @@
                 detailsDiv.find('.location').empty().attr('title', null);
                 eventsDiv.fadeIn();
             });
-            
+
         })();
 
         function updateDetail(data) {
@@ -212,11 +216,18 @@
                 } else {
                     eventDate.hide();
                 }
-            }   
+            }
 
 
             detailsDiv.find('a.communityName').attr('href', data.sourceurl ? 'http://' + data.sourceurl : '#').text(data.source);
             detailsDiv.find('.summary').text(data.summary ? data.summary : '');
+						detailsDiv.find('input#button1').click(function(e){
+							var link;
+							var and="&";
+							link="?title="+data.source+and+"descp="+data.description+and+"address="+data.location+and+"start="+data.start+and+"end="+data.end;
+							 window.open('https://timeline-api-fossasia-redirect.herokuapp.com/page1'+link,'_blank');
+
+						});
             detailsDiv.find('.description')
                 .append(escapeHtml(data.description))
                 .mCustomScrollbar({
@@ -230,22 +241,23 @@
             else detailsDiv.find('.datePanel').find('span').show();
             if (data.location)
                 detailsDiv.find('.location').append(escapeHtml(data.location)).attr('title', data.location).show();
-        }
+
+			  }
     };
 
     // Convert API datetime format to valid javascript format
     // YYYYMMDDT180000(Z) -> YYYY-MM-DDT200000
     Timeline.prototype.convertToValidDateTime= function(datetime) {
         if (!datetime) return '';
-        return datetime.substr(0, 4) + '-' 
+        return datetime.substr(0, 4) + '-'
              + datetime.substr(4, 2) + '-'
              + datetime.substr(6, 5) + ':'
              + datetime.substr(11, 2) + ':'
-             + datetime.substr(13, 2); 
+             + datetime.substr(13, 2);
     }
 
     Timeline.prototype.getData = function(callback) {
-        var apiCall = this.options.apiUrl 
+        var apiCall = this.options.apiUrl
             + '?fields=start,source,summary,description,url,end,location,sourceurl'
             + '&source=' + this.options.source
             + '&limit=' + this.options.limit;
@@ -256,7 +268,7 @@
             apiCall += '&sort=desc-start'
             + '&from=now';
         }
-        console.log(apiCall);
+
         $.getJSON(apiCall, function(apiResult) {
             callback(apiResult);
         });
