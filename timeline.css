@@ -98,20 +98,13 @@
   color : black;
 }
 
-.tl-details button#button1{
+.tl-details input#button1{
+	cursor: pointer;
+	margin-left: 22%;
+	margin-top: 3%
 
-  background-color: #f44336;
-  border: none;
-  color: black;
-  padding: 9px 18px;
-  text-align: center;
-  text-decoration:none ;
-  display: inline-block;
-  font-size: 12px;
-  margin: 4% 30%;
-  cursor: pointer;
-  border-radius:10px;
 }
+
 .tl-details .tl-event-date .year {
   font-size: 12px;
   display: inline-block;

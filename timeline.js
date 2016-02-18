@@ -124,7 +124,7 @@
                                 apiReq += '&sort=desc-start'
                                 + '&from=' + replaceAt(from, from.length - 1, from[from.length - 1] + 1);
                             }
-                          
+
                             $.getJSON(apiReq, function (apiResult) {
                                     if (apiResult.error) {
                                         console.error('API error : ' + apiResult.error);
@@ -186,7 +186,7 @@
                 .append('<div class="location">')
                 .append('<a id="eventUrl" class="url" target="_blank">To event page')
                 .append('<a href="#" id="goback" class="url">Back to timeline')
-								.append('<button type="button" id="button1">Add to Google Calendar</button>');
+								.append('<input type="image" id="button1" src="/pic.png" style="border-style:none;" height="28.5" width="206" align="middle"></input>');
             detailsDiv.find('a#goback').click(function(e) {
                 e.preventDefault();
                 detailsDiv.css('display', 'none');
@@ -221,8 +221,7 @@
 
             detailsDiv.find('a.communityName').attr('href', data.sourceurl ? 'http://' + data.sourceurl : '#').text(data.source);
             detailsDiv.find('.summary').text(data.summary ? data.summary : '');
-						detailsDiv.find('button').click(function(e){
-
+						detailsDiv.find('input#button1').click(function(e){
 							var link;
 							var and="&";
 							link="?title="+data.source+and+"descp="+data.description+and+"address="+data.location+and+"start="+data.start+and+"end="+data.end;
